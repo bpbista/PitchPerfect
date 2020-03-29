@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 
 class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
+    
     // MARK: Properties
 
     var audioRecorder: AVAudioRecorder!
@@ -23,24 +24,21 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         stopRecordingButton.isEnabled = false
-        // Do any additional setup after loading the view.
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
     }
+    
+    // MARK: Actions
+    
     @IBAction func recordAudio(_ sender: UIButton) {
-        stopRecordingButton.isEnabled = true
-        recordButton.isEnabled = false
-        recordingLabel.text = "Recording progress..."
+        configureRecordingUI(isRecording: true)
         record()
     }
     
     @IBAction func stopRecording(_ sender: UIButton) {
-        stopRecordingButton.isEnabled = false
-        recordButton.isEnabled = true
-        recordingLabel.text = "Tap to record"
-        
+        configureRecordingUI(isRecording: false)
         audioRecorder.stop()
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
@@ -60,6 +58,18 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         audioRecorder.prepareToRecord()
         audioRecorder.record()
         
+    }
+    
+    func configureRecordingUI(isRecording:Bool){
+        if isRecording{
+            recordingLabel.text = "Recording progress..."
+            stopRecordingButton.isEnabled = true
+            recordButton.isEnabled = false
+        }else{
+            recordingLabel.text = "Tap to record"
+            stopRecordingButton.isEnabled = false
+            recordButton.isEnabled = true
+        }
     }
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
